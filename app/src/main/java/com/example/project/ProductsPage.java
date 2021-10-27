@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,6 +33,8 @@ public class ProductsPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_products_page);
 
         lvProducts = findViewById(R.id.lvProducts);
@@ -52,8 +55,6 @@ public class ProductsPage extends AppCompatActivity {
                 List<ProductsModel> data = response.body();
 
                 for (ProductsModel dt : data) {
-                    Log.v("log:", dt.getProductID().toString());
-
                     //Integer productID, String productname, String description, Integer price, Integer category, String image
                     productsAdapter.add(new ProductsModel(dt.getProductID(), dt.getProductname(), dt.getDescription(),dt.getPrice(),dt.getCategory(),dt.getImage()));
                 }

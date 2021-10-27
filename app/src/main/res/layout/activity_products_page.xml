@@ -7,8 +7,8 @@
     tools:context=".ProductsPage">
 
     <ListView
-        android:id="@+id/lvProducts"
-        android:layout_width="411dp"
+        android:id="@+id/lvProduct"
+        android:layout_width="match_parent"
         android:layout_height="566dp"
         tools:layout_editor_absoluteX="-1dp"
         tools:layout_editor_absoluteY="164dp" />
