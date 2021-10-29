@@ -1,14 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.CartFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="80dp"
+        android:adjustViewBounds="true"
+        android:paddingTop="30dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg1" />
+
+    <TextView
+        android:id="@+id/myImageViewText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/myImageView"
+        android:layout_alignBottom="@+id/myImageView"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="1dp"
+        android:paddingTop="20dp"
+        android:textSize="40dp"
+        android:textStyle="bold"
+        android:text="Giỏ hàng"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="90dp"
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Số lượng sản phẩm: "
+        android:textStyle="bold"/>
+
+    <ListView
+        android:id="@+id/cartListView"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:layout_marginTop="120dp" />
+
+    <LinearLayout
+        android:layout_marginTop="590dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:text="Tổng cộng: " />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_marginRight="10dp"
+                android:gravity="right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:text="0 VND" />
+        </LinearLayout>
+
+        <Button
+            android:layout_marginTop="5dp"
+            android:id="@+id/button"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:backgroundTint="#06958c"
+            android:textColor="@color/black"
+            android:text="Thanh toán" />
+
+    </LinearLayout>
 
 </FrameLayout>

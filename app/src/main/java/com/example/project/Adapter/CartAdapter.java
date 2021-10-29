@@ -1,0 +1,65 @@
+package com.example.project.Adapter;
+
+import android.app.Activity;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.example.lib.Model.CartListModel;
+import com.example.lib.Model.ProductsModel;
+import com.example.project.R;
+import com.squareup.picasso.Picasso;
+
+import java.text.DecimalFormat;
+
+public class CartAdapter extends ArrayAdapter<CartListModel> {
+    Activity context;
+    int resource;
+    public CartAdapter(@NonNull Context context, int resource) {
+        super(context, resource);
+        this.context = (Activity) context;
+        this.resource = resource;
+    }
+
+    ImageView imgProduct;
+    TextView txtName ;
+    TextView txtPrice;
+    ElegantNumberButton amountButton;
+
+    @NonNull
+    @Override
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        LayoutInflater layoutInflater = this.context.getLayoutInflater();
+        View productView = layoutInflater.inflate(this.resource,null);
+
+        imgProduct = productView.findViewById(R.id.cartImage);
+        txtName = productView.findViewById(R.id.cartName);
+        txtPrice = productView.findViewById(R.id.cartPrice);
+        amountButton = productView.findViewById(R.id.cartAmount);
+
+        CartListModel spModel = getItem(position);
+
+        String imageUrl = spModel.getProduct().getImage();
+        String newImageURL = imageUrl.substring(5);
+
+        String URL = "http://10.0.2.2:8088" + newImageURL;
+
+        DecimalFormat format = new DecimalFormat("0.#");
+        String newPrice = format.format(spModel.getProduct().getPrice()) + " VND";
+
+        Picasso.get().load(URL).into(imgProduct);
+        txtName.setText(spModel.getProduct().getProductname());
+        txtPrice.setText(newPrice);
+        amountButton.setNumber(Integer.toString(spModel.getAmount()));
+
+        return productView;
+    }
+}

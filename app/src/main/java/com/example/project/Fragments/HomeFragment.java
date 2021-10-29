@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.lib.Model.ProductsModel;
 import com.example.lib.interfaceRepository.Methods;
@@ -39,12 +40,6 @@ import retrofit2.Response;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-
-    List<ProductsModel> CartList = new ArrayList<>();
-    android.widget.ListView lvProducts;
-    ProductsAdapter productsAdapter;
-
-    ArrayList<ProductsModel> studentModelsList =  new ArrayList<>();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -93,6 +88,12 @@ public class HomeFragment extends Fragment {
         super.onAttach(context);
     }
 
+    List<ProductsModel> CartList = new ArrayList<>();
+    android.widget.ListView lvProducts;
+    ProductsAdapter productsAdapter;
+
+    ArrayList<ProductsModel> studentModelsList =  new ArrayList<>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -130,6 +131,7 @@ public class HomeFragment extends Fragment {
 
         return rootView;
     }
+
 
     private void getProduct() {
         Methods methods = getRetrofit().create(Methods.class);

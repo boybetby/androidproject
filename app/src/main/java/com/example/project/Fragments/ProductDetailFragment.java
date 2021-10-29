@@ -76,14 +76,16 @@ public class ProductDetailFragment extends Fragment {
     ElegantNumberButton amountButton;
 
     public int amount;
+    public int cartcount = 0;
 
+    int productID;
     String productName;
     double productPrice;
     String productImageURL;
 
     ImageView imgProduct;
-    TextView txtName;
-    TextView txtPrice;
+    TextView txtID, txtName, txtPrice;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,16 +98,19 @@ public class ProductDetailFragment extends Fragment {
         String URL = bundle.getString("image");
         String newImageURL = URL.substring(5);
 
+        productID = bundle.getInt("id");
         productImageURL = "http://10.0.2.2:8088" + newImageURL;
         productName = bundle.getString("name");
         productPrice = bundle.getDouble("price");
 
 
         imgProduct = rootView.findViewById(R.id.detailImage);
+        txtID = rootView.findViewById(R.id.detailID);
         txtName = rootView.findViewById(R.id.detailName);
         txtPrice = rootView.findViewById(R.id.detailPrice);
 
         Picasso.get().load(productImageURL).into(imgProduct);
+        txtID.setText(Integer.toString(productID));
         txtName.setText(productName);
         txtPrice.setText(formatPrice(productPrice));
 
@@ -126,5 +131,9 @@ public class ProductDetailFragment extends Fragment {
     public String formatPrice (Double price){
         DecimalFormat format = new DecimalFormat("0.#");
         return format.format(price) + " VND";
+    }
+
+    private void getDetail(){
+
     }
 }
