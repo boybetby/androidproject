@@ -13,7 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.example.lib.Model.CartListModel;
 import com.example.lib.Model.ProductsModel;
 import com.example.lib.interfaceRepository.Methods;
@@ -21,12 +23,9 @@ import com.example.project.Adapter.CartAdapter;
 import com.example.project.Adapter.ProductsAdapter;
 import com.example.project.R;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -81,24 +80,89 @@ public class CartFragment extends Fragment {
 
     ArrayList<CartListModel> cartlist = new ArrayList<>();
     ListView lvCart;
+    TextView cartTotalPrice, cartTotalAmount;
     CartAdapter cartAdapter;
+    double totalPrice = 0;
+    int totalAmount = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_cart, container, false);
-        lvCart = (ListView)rootView.findViewById(R.id.cartListView);
+        lvCart = (ListView) rootView.findViewById(R.id.cartListView);
         cartAdapter = new CartAdapter(getActivity(), R.layout.cardcart);
 
-        Bundle arguments = getArguments();
+        Bundle arguments = this.getArguments();
         if (arguments != null){
-            cartlist = (ArrayList<CartListModel>) getArguments().getSerializable("cartlist");
+            cartlist = (ArrayList<CartListModel>) arguments.getSerializable("cartlist");
             for (CartListModel item : cartlist) {
+//                totalPrice += item.getProduct().getPrice()*item.getAmount();
+//                totalAmount += 1;
                 cartAdapter.add(item);
             }
         }
-        return rootView;
 
+        for (int i = 0; i < cartlist.size(); i ++) {
+            CartListModel item = cartAdapter.getItem(i);
+            totalPrice += item.getProduct().getPrice()*item.getAmount();
+            totalAmount += 1;
+        }
+
+        cartAdapter.setOnDataChangeListener(new CartAdapter.OnDataChangeListener(){
+            @Override
+            public void onDataChanged(CartListModel spModel) {
+                totalPrice = 0;
+                totalAmount = 0;
+                for (int i = 0; i < cartlist.size(); i ++) {
+                    CartListModel item = cartAdapter.getItem(i);
+                    if (item.getAmount() == 0) {
+                        cartlist.remove(item);
+                        cartAdapter.remove(item);
+                    }
+                    else {
+                        totalPrice += item.getProduct().getPrice()*item.getAmount();
+                        totalAmount += 1;
+                    }
+
+                }
+                cartTotalPrice =  rootView.findViewById(R.id.cartTotalPrice);
+                cartTotalPrice.setText(formatPrice(totalPrice));
+
+                String cartMessage;
+                if(totalAmount == 0){
+                    cartMessage = "Bạn chưa thêm vào giỏ hàng";
+                }
+                else{
+                    cartMessage = "Số loại mặt hàng có trong giỏ hàng: " + Integer.toString(totalAmount);
+                }
+
+                cartTotalAmount.setText(cartMessage);
+            }
+        });
+
+        cartTotalPrice =  rootView.findViewById(R.id.cartTotalPrice);
+        cartTotalPrice.setText(formatPrice(totalPrice));
+        cartTotalAmount =  rootView.findViewById(R.id.cartTotalAmount);
+
+        String cartMessage;
+        if(totalAmount == 0){
+            cartMessage = "Bạn chưa thêm vào giỏ hàng";
+        }
+        else{
+            cartMessage = "Số loại mặt hàng có trong giỏ hàng: " + Integer.toString(totalAmount);
+        }
+
+        cartTotalAmount.setText(cartMessage);
+
+        lvCart.setAdapter(cartAdapter);
+
+
+        return rootView;
+    }
+
+    public String formatPrice (Double price){
+        DecimalFormat format = new DecimalFormat("0.#");
+        return format.format(price) + " VND";
     }
 }

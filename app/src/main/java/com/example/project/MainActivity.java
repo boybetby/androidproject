@@ -35,6 +35,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity{
 
     MeowBottomNavigation bottomNavigation;
+    ElegantNumberButton amountButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,11 +131,6 @@ public class MainActivity extends AppCompatActivity{
                 .commit();
     }
 
-
-    public void setCartCount(int count){
-        bottomNavigation.setCount(2,String.valueOf(count));
-    }
-
     ElegantNumberButton numberButton;
     int cartCount = 0;
     TextView txtProductName, txtProductID;
@@ -152,9 +148,6 @@ public class MainActivity extends AppCompatActivity{
         displayMessage(view, Name, numberButton.getNumber());
 
         getProduct(txtProductID.getText().toString(), Integer.parseInt(numberButton.getNumber()));
-
-        Log.v("log", Integer.toString(cartlist.size()));
-//        cartlist.add();
     }
 
     public void getProduct(String id, int amount){

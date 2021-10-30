@@ -2,6 +2,7 @@ package com.example.project.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ public class CartAdapter extends ArrayAdapter<CartListModel> {
         txtName = productView.findViewById(R.id.cartName);
         txtPrice = productView.findViewById(R.id.cartPrice);
         amountButton = productView.findViewById(R.id.cartAmount);
+        amountButton.setRange(0, 1000);
 
         CartListModel spModel = getItem(position);
 
@@ -60,6 +62,24 @@ public class CartAdapter extends ArrayAdapter<CartListModel> {
         txtPrice.setText(newPrice);
         amountButton.setNumber(Integer.toString(spModel.getAmount()));
 
+        amountButton.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
+            @Override
+            public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
+                spModel.setAmount(newValue);
+                if(mOnDataChangeListener != null){
+                    mOnDataChangeListener.onDataChanged(spModel);
+                }
+            }
+        });
+
         return productView;
+    }
+
+    public interface OnDataChangeListener{
+        public void onDataChanged(CartListModel spModel);
+    }
+    OnDataChangeListener mOnDataChangeListener;
+    public void setOnDataChangeListener(OnDataChangeListener onDataChangeListener){
+        mOnDataChangeListener = onDataChangeListener;
     }
 }
