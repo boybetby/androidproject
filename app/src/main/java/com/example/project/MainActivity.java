@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -182,5 +183,10 @@ public class MainActivity extends AppCompatActivity{
         snackbarView.setLayoutParams(lp);
 
         mySnackbar.show();
+    }
+
+    public void CheckOut(View view) {
+        Intent newActivity = new Intent(MainActivity.this, OrderActivity.class );
+        startActivity(newActivity);
     }
 }

@@ -6,6 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient {
     private static Retrofit retrofit;
     private static String Base_Url = "http://10.0.2.2:8088/";
+    private static String GHN_Url = "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/";
     public static Retrofit getRetrofit(){
         if(retrofit == null){
             retrofit = new Retrofit.Builder().baseUrl(Base_Url)
