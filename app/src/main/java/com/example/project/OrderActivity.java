@@ -14,6 +14,7 @@ import android.widget.Spinner;
 
 import com.example.lib.Model.GHNapi.District;
 import com.example.lib.Model.GHNapi.Province;
+import com.example.lib.Model.GHNapi.Ward;
 import com.example.lib.Model.ProductsModel;
 import com.example.lib.interfaceRepository.Methods;
 
@@ -30,8 +31,11 @@ public class OrderActivity extends AppCompatActivity {
     Spinner provinceSpinner, districtSpinner ,wardSpinner;
     List<String> listProvince = new ArrayList<>();
     List<String> listDistrict = new ArrayList<>();
+    List<String> listWard = new ArrayList<>();
     List<Province.Datum> ProvinceData;
     List<District.Datum> DistrictData;
+    List<Ward.Datum> WardData;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,7 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 int provinceID = 0;
+
                 String province = provinceSpinner.getSelectedItem().toString();
 
                 for(Province.Datum item : ProvinceData){
@@ -59,6 +64,7 @@ public class OrderActivity extends AppCompatActivity {
                 }
 
                 if(provinceID != 0) getDistrict(provinceID);
+
             }
 
             @Override
@@ -70,7 +76,17 @@ public class OrderActivity extends AppCompatActivity {
         districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                int districtID = 0;
+                String district = districtSpinner.getSelectedItem().toString();
 
+                for(District.Datum item : DistrictData){
+                    if(item.getDistrictName() == district){
+                        districtID = item.getDistrictID();
+                    }
+                }
+
+                if(districtID != 0)
+                    getWard(districtID);
             }
 
             @Override
@@ -91,6 +107,7 @@ public class OrderActivity extends AppCompatActivity {
 
                 for (Province.Datum dt : ProvinceData) {
                     listProvince.add(dt.getProvinceName());
+
                 }
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
@@ -108,6 +125,8 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     private void getDistrict(int province) {
+        listDistrict.clear();
+        int districtID = 0;
         Methods methods = getRetrofit().create(Methods.class);
         Call<District> call = methods.getDistrict(token);
         call.enqueue(new Callback<District>() {
@@ -117,7 +136,9 @@ public class OrderActivity extends AppCompatActivity {
                 DistrictData = response.body().getData();
 
                 for (District.Datum dt : DistrictData) {
-                    if(dt.getProvinceID() == province) listDistrict.add(dt.getDistrictName());
+                    if(dt.getProvinceID() == province) {
+                        listDistrict.add(dt.getDistrictName());
+                    }
                 }
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
@@ -129,6 +150,29 @@ public class OrderActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<District> call, Throwable t) {
+                Log.v("log:", t.getMessage());
+            }
+        });
+    }
+
+    private void getWard(int districtID) {
+        listWard.clear();
+        Methods methods = getRetrofit().create(Methods.class);
+        Call<Ward> call = methods.getWard(token, districtID);
+        call.enqueue(new Callback<Ward>() {
+            @Override
+            public void onResponse(Call<Ward> call, Response<Ward> response) {
+                WardData = response.body().getData();
+                for (Ward.Datum dt : WardData) {
+                        listWard.add(dt.getWardName());
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
+                        android.R.layout.simple_list_item_1, listWard);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                wardSpinner.setAdapter(adapter);
+            }
+            @Override
+            public void onFailure(Call<Ward> call, Throwable t) {
                 Log.v("log:", t.getMessage());
             }
         });
