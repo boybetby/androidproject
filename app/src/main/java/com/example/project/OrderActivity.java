@@ -11,23 +11,33 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.lib.Model.GHNapi.District;
 import com.example.lib.Model.GHNapi.Province;
 import com.example.lib.Model.GHNapi.Ward;
-import com.example.lib.Model.ProductsModel;
+import com.example.lib.Model.Order.Address;
+import com.example.lib.Model.Order.ShippingFee;
 import com.example.lib.interfaceRepository.Methods;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Query;
 
 public class OrderActivity extends AppCompatActivity {
 
     String token = "33103c88-ec46-11eb-9388-d6e0030cbbb7";
+    String access_key="1d4e94a3da4ea7dfc7916c51c93d0860";
+
+    String myAddress = "357 Lê Văn Lương, Tân Quy, Quận 7, Hồ Chí Minh";
+
+    TextView txtAddress;
     Spinner provinceSpinner, districtSpinner ,wardSpinner;
     List<String> listProvince = new ArrayList<>();
     List<String> listDistrict = new ArrayList<>();
@@ -53,7 +63,7 @@ public class OrderActivity extends AppCompatActivity {
         provinceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                int provinceID = 0;
+
 
                 String province = provinceSpinner.getSelectedItem().toString();
 
@@ -76,7 +86,7 @@ public class OrderActivity extends AppCompatActivity {
         districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                int districtID = 0;
+
                 String district = districtSpinner.getSelectedItem().toString();
 
                 for(District.Datum item : DistrictData){
@@ -95,6 +105,8 @@ public class OrderActivity extends AppCompatActivity {
             }
         });
     }
+    int provinceID;
+    int districtID;
 
     private void getProvince() {
         Methods methods = getRetrofit().create(Methods.class);
@@ -173,6 +185,48 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Ward> call, Throwable t) {
                 Log.v("log:", t.getMessage());
+            }
+        });
+    }
+
+    String Address;
+
+    public void Confirm(View view) {
+        provinceSpinner = findViewById(R.id.spinnerProvince);
+        districtSpinner = findViewById(R.id.spinnerDistrict);
+        wardSpinner = findViewById(R.id.spinnerWard);
+
+        txtAddress = findViewById(R.id.txtAddress);
+
+        String province, district, ward, address;
+
+        province = provinceSpinner.getSelectedItem().toString();
+        district = districtSpinner.getSelectedItem().toString();
+        ward = wardSpinner.getSelectedItem().toString();
+        address = txtAddress.getText().toString();
+
+        Address = address + ", " + ward + ", " + district + ", " + province;
+        getLocation();
+
+
+    }
+
+    ShippingFee.Data GHNfee;
+    int shippingFee;
+
+    public void getLocation(){
+        Methods methods = getRetrofit().create(Methods.class);
+        Call<ShippingFee> call = methods.getShippingFee(token, 53321, 202, 1449, provinceID, districtID, 30, 20, 2000, 10);
+        call.enqueue(new Callback<ShippingFee>() {
+            @Override
+            public void onResponse(Call<ShippingFee> call, Response<ShippingFee> response) {
+                GHNfee = response.body().getData();
+                Log.v("log: ", GHNfee.getTotal().toString());
+                shippingFee = GHNfee.getTotal();
+            }
+            @Override
+            public void onFailure(Call<ShippingFee> call, Throwable t) {
+                Log.v("log: ", t.getMessage());
             }
         });
     }
