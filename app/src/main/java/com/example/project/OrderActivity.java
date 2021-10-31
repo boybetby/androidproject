@@ -126,7 +126,6 @@ public class OrderActivity extends AppCompatActivity {
 
     private void getDistrict(int province) {
         listDistrict.clear();
-        int districtID = 0;
         Methods methods = getRetrofit().create(Methods.class);
         Call<District> call = methods.getDistrict(token);
         call.enqueue(new Callback<District>() {
