@@ -32,7 +32,7 @@ public interface Methods {
     Call<ProductsModel> getDetail(@Path("id") String id);
     @POST("api/OrdersAPI")
     Call<Order> insertOrder(@Body Order order);
-    @POST("api/OrdersAPI")
+    @POST("api/OrderDetailsAPI")
     Call<OrderDetail> insertOrderDetail(@Body OrderDetail orderDetail);
 
     //ghnApi

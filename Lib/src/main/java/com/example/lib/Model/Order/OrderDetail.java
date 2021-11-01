@@ -1,19 +1,28 @@
 package com.example.lib.Model.Order;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class OrderDetail implements Serializable {
-    Order order;
-    Integer ProductID;
-    Integer amount;
-
-    public OrderDetail() {
-    }
+    @SerializedName("Order")
+    @Expose
+    private Order order;
+    @SerializedName("ProductID")
+    @Expose
+    private Integer productID;
+    @SerializedName("amount")
+    @Expose
+    private Integer amount;
 
     public OrderDetail(Order order, Integer productID, Integer amount) {
         this.order = order;
-        ProductID = productID;
+        this.productID = productID;
         this.amount = amount;
+    }
+
+    public OrderDetail() {
     }
 
     public Order getOrder() {
@@ -25,11 +34,11 @@ public class OrderDetail implements Serializable {
     }
 
     public Integer getProductID() {
-        return ProductID;
+        return productID;
     }
 
     public void setProductID(Integer productID) {
-        ProductID = productID;
+        this.productID = productID;
     }
 
     public Integer getAmount() {
@@ -39,4 +48,6 @@ public class OrderDetail implements Serializable {
     public void setAmount(Integer amount) {
         this.amount = amount;
     }
+
 }
+
