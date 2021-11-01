@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ConfirmOrderActivity"
+    android:orientation="vertical"
+    android:background="#b6b5b6">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Xin hãy xác nhận đơn hàng"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="15dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:textSize="17dp"
+                android:text="Họ và tên:" />
+
+            <TextView
+                android:id="@+id/confirmName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textSize="17dp"
+                android:text="Nguyen Nhat Minh" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:textSize="17dp"
+                android:text="Email:" />
+
+            <TextView
+                android:id="@+id/confirmEmail"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:singleLine="false"
+                android:textSize="17dp"
+                android:text="nhatminhnguyen@gmail.com" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:textSize="17dp"
+                android:text="Số điện thoại:" />
+
+            <TextView
+                android:id="@+id/confirmPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textSize="17dp"
+                android:text="0123456789" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:textSize="17dp"
+                android:text="Địa chỉ:" />
+
+            <TextView
+                android:id="@+id/confirmAddress"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textSize="17dp"
+                android:singleLine="false"
+                android:text="357 Le Van Luong, Tan Quy, Quan 7, Ho Chi Minh" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="26dp"
+            android:text="Sản phẩm:"
+            android:textSize="17dp"
+            android:textStyle="bold" />
+
+        <ListView
+            android:layout_marginTop="5dp"
+            android:id="@+id/confirmCartlist"
+            android:layout_width="match_parent"
+            android:layout_height="312dp" />
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:textSize="17dp"
+                android:text="Tổng sản phẩm: " />
+
+            <TextView
+                android:id="@+id/confirmPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textSize="17dp"
+                android:text="1000000 VND" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:textSize="17dp"
+                android:text="Phí vận chuyển: " />
+
+            <TextView
+                android:id="@+id/confirmFee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textSize="17dp"
+                android:text="50000 VND" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:textSize="17dp"
+                android:text="Tổng cộng: " />
+
+            <TextView
+                android:id="@+id/confirmTotalPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textSize="17dp"
+                android:text="1500000" />
+
+        </LinearLayout>
+
+        <Button
+            android:onClick="confirm"
+            android:layout_marginTop="10dp"
+            android:id="@+id/btnConfirm"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:backgroundTint="#e2b5b6"
+            android:textColor="@color/black"
+            android:text="Xác nhận" />
+    </LinearLayout>
+
+</LinearLayout>

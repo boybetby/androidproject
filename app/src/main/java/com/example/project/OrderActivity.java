@@ -4,6 +4,7 @@ import static com.example.lib.RetrofitClient.getRetrofit;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.lib.Model.CartListModel;
 import com.example.lib.Model.GHNapi.District;
 import com.example.lib.Model.GHNapi.Province;
 import com.example.lib.Model.GHNapi.Ward;
@@ -20,6 +22,7 @@ import com.example.lib.Model.Order.Address;
 import com.example.lib.Model.Order.ShippingFee;
 import com.example.lib.interfaceRepository.Methods;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +40,7 @@ public class OrderActivity extends AppCompatActivity {
 
     String myAddress = "357 Lê Văn Lương, Tân Quy, Quận 7, Hồ Chí Minh";
 
-    TextView txtAddress;
+    TextView txtAddress, txtName, txtPhone, txtEmail;
     Spinner provinceSpinner, districtSpinner ,wardSpinner;
     List<String> listProvince = new ArrayList<>();
     List<String> listDistrict = new ArrayList<>();
@@ -45,6 +48,8 @@ public class OrderActivity extends AppCompatActivity {
     List<Province.Datum> ProvinceData;
     List<District.Datum> DistrictData;
     List<Ward.Datum> WardData;
+
+    List<CartListModel> cartlist = new ArrayList<>();
 
 
     @Override
@@ -58,12 +63,14 @@ public class OrderActivity extends AppCompatActivity {
         districtSpinner = findViewById(R.id.spinnerDistrict);
         wardSpinner = findViewById(R.id.spinnerWard);
 
+        Intent intent = getIntent();
+        cartlist = (List<CartListModel>) intent.getSerializableExtra("cartlist");
+
         getProvince();
 
         provinceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
 
                 String province = provinceSpinner.getSelectedItem().toString();
 
@@ -74,7 +81,6 @@ public class OrderActivity extends AppCompatActivity {
                 }
 
                 if(provinceID != 0) getDistrict(provinceID);
-
             }
 
             @Override
@@ -95,6 +101,8 @@ public class OrderActivity extends AppCompatActivity {
                     }
                 }
 
+                getLocation();
+
                 if(districtID != 0)
                     getWard(districtID);
             }
@@ -105,6 +113,7 @@ public class OrderActivity extends AppCompatActivity {
             }
         });
     }
+
     int provinceID;
     int districtID;
 
@@ -192,23 +201,40 @@ public class OrderActivity extends AppCompatActivity {
     String Address;
 
     public void Confirm(View view) {
+
+
+
         provinceSpinner = findViewById(R.id.spinnerProvince);
         districtSpinner = findViewById(R.id.spinnerDistrict);
         wardSpinner = findViewById(R.id.spinnerWard);
-
         txtAddress = findViewById(R.id.txtAddress);
+        txtName = findViewById(R.id.orderName);
+        txtEmail = findViewById(R.id.orderEmail);
+        txtPhone = findViewById(R.id.orderPhone);
 
-        String province, district, ward, address;
+        String province, district, ward, address, name, email, phone;
 
         province = provinceSpinner.getSelectedItem().toString();
         district = districtSpinner.getSelectedItem().toString();
         ward = wardSpinner.getSelectedItem().toString();
         address = txtAddress.getText().toString();
+        name = txtName.getText().toString();
+        email = txtEmail.getText().toString();
+        phone = txtPhone.getText().toString();
 
         Address = address + ", " + ward + ", " + district + ", " + province;
-        getLocation();
 
 
+
+        Intent newActivity = new Intent(OrderActivity.this, ConfirmOrderActivity.class );
+        newActivity.putExtra("name", name);
+        newActivity.putExtra("email", email);
+        newActivity.putExtra("phone", phone);
+        newActivity.putExtra("address", Address);
+        newActivity.putExtra("shippingFee", shippingFee);
+        newActivity.putExtra("cartlist", (Serializable) cartlist);
+
+        startActivity(newActivity);
     }
 
     ShippingFee.Data GHNfee;

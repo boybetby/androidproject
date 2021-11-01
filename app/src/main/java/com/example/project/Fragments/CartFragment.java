@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.lib.Model.CartListModel;
 import com.example.lib.Model.ProductsModel;
 import com.example.lib.interfaceRepository.Methods;
@@ -85,11 +86,15 @@ public class CartFragment extends Fragment {
     double totalPrice = 0;
     int totalAmount = 0;
 
+    MeowBottomNavigation bottomNavigation;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_cart, container, false);
+
+        bottomNavigation = (MeowBottomNavigation) rootView.findViewById(R.id.bottom_navigation);
         lvCart = (ListView) rootView.findViewById(R.id.cartListView);
         cartAdapter = new CartAdapter(getActivity(), R.layout.cardcart);
 
@@ -97,8 +102,6 @@ public class CartFragment extends Fragment {
         if (arguments != null){
             cartlist = (ArrayList<CartListModel>) arguments.getSerializable("cartlist");
             for (CartListModel item : cartlist) {
-//                totalPrice += item.getProduct().getPrice()*item.getAmount();
-//                totalAmount += 1;
                 cartAdapter.add(item);
             }
         }
@@ -108,6 +111,7 @@ public class CartFragment extends Fragment {
             totalPrice += item.getProduct().getPrice()*item.getAmount();
             totalAmount += 1;
         }
+
 
         cartAdapter.setOnDataChangeListener(new CartAdapter.OnDataChangeListener(){
             @Override
@@ -119,6 +123,7 @@ public class CartFragment extends Fragment {
                     if (item.getAmount() == 0) {
                         cartlist.remove(item);
                         cartAdapter.remove(item);
+
                     }
                     else {
                         totalPrice += item.getProduct().getPrice()*item.getAmount();
@@ -156,7 +161,6 @@ public class CartFragment extends Fragment {
         cartTotalAmount.setText(cartMessage);
 
         lvCart.setAdapter(cartAdapter);
-
 
         return rootView;
     }

@@ -4,6 +4,7 @@ import com.example.lib.Model.GHNapi.District;
 import com.example.lib.Model.GHNapi.Province;
 import com.example.lib.Model.GHNapi.Ward;
 import com.example.lib.Model.Order.Address;
+import com.example.lib.Model.Order.Order;
 import com.example.lib.Model.Order.ShippingFee;
 import com.example.lib.Model.OrderModel;
 import com.example.lib.Model.ProductsModel;
@@ -29,7 +30,7 @@ public interface Methods {
     @GET("api/fetch/{id}")
     Call<ProductsModel> getDetail(@Path("id") String id);
     @POST("api/OrdersAPI")
-    Call<OrderModel> insertContent(@Body OrderModel orderModel);
+    Call<Order> insertOrder(@Body Order order);
 
     //ghnApi
     @GET("https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province")

@@ -25,6 +25,7 @@ import com.example.project.Fragments.HomeFragment;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,6 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity{
 
     MeowBottomNavigation bottomNavigation;
-    ElegantNumberButton amountButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity{
 
             }
         });
-
 
         //an lai lan nua
         bottomNavigation.setOnReselectListener(new MeowBottomNavigation.ReselectListener() {
@@ -187,6 +186,7 @@ public class MainActivity extends AppCompatActivity{
 
     public void CheckOut(View view) {
         Intent newActivity = new Intent(MainActivity.this, OrderActivity.class );
+        newActivity.putExtra("cartlist", (Serializable) cartlist);
         startActivity(newActivity);
     }
 }
