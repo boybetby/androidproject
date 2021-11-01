@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.lib.Model.CartListModel;
 import com.example.lib.Model.Order.Order;
+import com.example.lib.Model.Order.OrderDetail;
 import com.example.lib.interfaceRepository.Methods;
 import com.example.project.Adapter.ConfirmAdapter;
 
@@ -89,13 +90,16 @@ public class ConfirmOrderActivity extends AppCompatActivity {
 
     public void confirm(View view) {
         OrderID = getAlphaNumericString(10);
-
         Date d = new Date();
         CharSequence date  = DateFormat.format("MM/dd/yyyy hh:mm:ss", d.getTime());
-
         order = new Order(OrderID, name, email, phone, address, totalPrice, date.toString());
 
         insertOrder(order);
+
+        for(CartListModel item : cartlist){
+            OrderDetail orderDetail = new OrderDetail(order, item.getProduct().getProductID(), item.getAmount());
+            insertOrderDetail(orderDetail);
+        }
     }
 
     public void getCartList(){
@@ -123,6 +127,22 @@ public class ConfirmOrderActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Order> call, Throwable t) {
+                Log.v("log:", t.getMessage());
+            }
+        });
+    }
+
+    public void insertOrderDetail(OrderDetail orderDetail){
+        Methods methods = getRetrofit().create(Methods.class);
+        Call<OrderDetail> call = methods.insertOrderDetail(orderDetail);
+        call.enqueue(new Callback<OrderDetail>() {
+            @Override
+            public void onResponse(Call<OrderDetail> call, Response<OrderDetail> response) {
+                Log.v("log:" , response.toString());
+            }
+
+            @Override
+            public void onFailure(Call<OrderDetail> call, Throwable t) {
                 Log.v("log:", t.getMessage());
             }
         });
