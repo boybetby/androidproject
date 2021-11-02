@@ -6,9 +6,9 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class OrderDetail implements Serializable {
-    @SerializedName("Order")
+    @SerializedName("OrderID")
     @Expose
-    private Order order;
+    private String orderid;
     @SerializedName("ProductID")
     @Expose
     private Integer productID;
@@ -16,21 +16,22 @@ public class OrderDetail implements Serializable {
     @Expose
     private Integer amount;
 
-    public OrderDetail(Order order, Integer productID, Integer amount) {
-        this.order = order;
+    public OrderDetail() {
+
+    }
+
+    public OrderDetail(String orderid, Integer productID, Integer amount) {
+        this.orderid = orderid;
         this.productID = productID;
         this.amount = amount;
     }
 
-    public OrderDetail() {
+    public String getOrderid() {
+        return orderid;
     }
 
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrderid(String orderid) {
+        this.orderid = orderid;
     }
 
     public Integer getProductID() {

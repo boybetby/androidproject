@@ -97,7 +97,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         insertOrder(order);
 
         for(CartListModel item : cartlist){
-            OrderDetail orderDetail = new OrderDetail(order, item.getProduct().getProductID(), item.getAmount());
+            OrderDetail orderDetail = new OrderDetail(order.getOrderID(), item.getProduct().getProductID(), item.getAmount());
             insertOrderDetail(orderDetail);
         }
     }
