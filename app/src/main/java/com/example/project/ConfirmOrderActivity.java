@@ -5,11 +5,8 @@ import static com.example.lib.RetrofitClient.getRetrofit;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.icu.text.SimpleDateFormat;
-import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,10 +18,9 @@ import com.example.lib.Model.Order.Order;
 import com.example.lib.Model.Order.OrderDetail;
 import com.example.lib.interfaceRepository.Methods;
 import com.example.project.Adapter.ConfirmAdapter;
+import com.example.project.PopupDialog.SuccessDialog;
 
 import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -100,6 +96,8 @@ public class ConfirmOrderActivity extends AppCompatActivity {
             OrderDetail orderDetail = new OrderDetail(order.getOrderID(), item.getProduct().getProductID(), item.getAmount());
             insertOrderDetail(orderDetail);
         }
+        cartlist.clear();
+        showDialog();
     }
 
     public void getCartList(){
@@ -173,6 +171,12 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         }
 
         return sb.toString();
+    }
+
+
+    public void showDialog(){
+        SuccessDialog exampleDialog = new SuccessDialog();
+        exampleDialog.show(getSupportFragmentManager(), "success dialog");
     }
 
 }

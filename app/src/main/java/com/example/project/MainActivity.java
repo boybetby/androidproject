@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity{
 
         bottomNavigation.add(new MeowBottomNavigation.Model(1, R.drawable.ic_home));
         bottomNavigation.add(new MeowBottomNavigation.Model(2, R.drawable.ic_cart));
-        bottomNavigation.add(new MeowBottomNavigation.Model(3, R.drawable.ic_about));
+        bottomNavigation.add(new MeowBottomNavigation.Model(3, R.drawable.ic_chat));
 
         bottomNavigation.setOnShowListener(new MeowBottomNavigation.ShowListener() {
             @Override
@@ -184,9 +184,32 @@ public class MainActivity extends AppCompatActivity{
         mySnackbar.show();
     }
 
+    public void displayEmpty(View view,String text){
+        Context context = getApplicationContext();
+        int duration = BaseTransientBottomBar.LENGTH_SHORT;
+
+        Snackbar mySnackbar = Snackbar.make(view, text, duration);
+        View snackbarView = mySnackbar.getView();
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        lp.setMargins(0, 1500, 0, 0);
+        snackbarView.setLayoutParams(lp);
+
+        mySnackbar.show();
+    }
+
     public void CheckOut(View view) {
         Intent newActivity = new Intent(MainActivity.this, OrderActivity.class );
-        newActivity.putExtra("cartlist", (Serializable) cartlist);
-        startActivity(newActivity);
+        if(cartlist.size()==0){
+            String message = "Bạn chưa thêm sản phẩm vào giỏ hàng";
+            displayEmpty(view, message);
+        }
+        else{
+            newActivity.putExtra("cartlist", (Serializable) cartlist);
+            startActivity(newActivity);
+        }
+
     }
 }

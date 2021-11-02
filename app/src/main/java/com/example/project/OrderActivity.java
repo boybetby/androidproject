@@ -5,12 +5,16 @@ import static com.example.lib.RetrofitClient.getRetrofit;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -40,8 +44,10 @@ public class OrderActivity extends AppCompatActivity {
 
     String myAddress = "357 Lê Văn Lương, Tân Quy, Quận 7, Hồ Chí Minh";
 
-    TextView txtAddress, txtName, txtPhone, txtEmail;
+    EditText txtAddress, txtName, txtPhone, txtEmail;
     Spinner provinceSpinner, districtSpinner ,wardSpinner;
+    Button btnConfirm;
+
     List<String> listProvince = new ArrayList<>();
     List<String> listDistrict = new ArrayList<>();
     List<String> listWard = new ArrayList<>();
@@ -62,6 +68,11 @@ public class OrderActivity extends AppCompatActivity {
         provinceSpinner = findViewById(R.id.spinnerProvince);
         districtSpinner = findViewById(R.id.spinnerDistrict);
         wardSpinner = findViewById(R.id.spinnerWard);
+
+        txtAddress = findViewById(R.id.txtAddress);
+        txtName = findViewById(R.id.orderName);
+        txtEmail = findViewById(R.id.orderEmail);
+        txtPhone = findViewById(R.id.orderPhone);
 
         Intent intent = getIntent();
         cartlist = (List<CartListModel>) intent.getSerializableExtra("cartlist");
@@ -101,7 +112,7 @@ public class OrderActivity extends AppCompatActivity {
                     }
                 }
 
-                getLocation();
+                getShippingFee();
 
                 if(districtID != 0)
                     getWard(districtID);
@@ -202,8 +213,6 @@ public class OrderActivity extends AppCompatActivity {
 
     public void Confirm(View view) {
 
-
-
         provinceSpinner = findViewById(R.id.spinnerProvince);
         districtSpinner = findViewById(R.id.spinnerDistrict);
         wardSpinner = findViewById(R.id.spinnerWard);
@@ -212,42 +221,53 @@ public class OrderActivity extends AppCompatActivity {
         txtEmail = findViewById(R.id.orderEmail);
         txtPhone = findViewById(R.id.orderPhone);
 
-        String province, district, ward, address, name, email, phone;
+        if(TextUtils.isEmpty(txtName.getText())){
+            txtName.setError("Xin hãy điền họ tên");
+        }
+        if(TextUtils.isEmpty(txtEmail.getText())){
+            txtEmail.setError("Xin hãy điền Email");
+        }
+        if(TextUtils.isEmpty(txtPhone.getText())){
+            txtPhone.setError("Xin hãy điền số điện thoại");
+        }
+        if(TextUtils.isEmpty(txtAddress.getText())){
+            txtAddress.setError("Xin hãy điền địa chỉ");
+        }
+        else{
+            String province, district, ward, address, name, email, phone;
 
-        province = provinceSpinner.getSelectedItem().toString();
-        district = districtSpinner.getSelectedItem().toString();
-        ward = wardSpinner.getSelectedItem().toString();
-        address = txtAddress.getText().toString();
-        name = txtName.getText().toString();
-        email = txtEmail.getText().toString();
-        phone = txtPhone.getText().toString();
+            province = provinceSpinner.getSelectedItem().toString();
+            district = districtSpinner.getSelectedItem().toString();
+            ward = wardSpinner.getSelectedItem().toString();
+            address = txtAddress.getText().toString();
+            name = txtName.getText().toString();
+            email = txtEmail.getText().toString();
+            phone = txtPhone.getText().toString();
 
-        Address = address + ", " + ward + ", " + district + ", " + province;
+            Address = address + ", " + ward + ", " + district + ", " + province;
 
+            Intent newActivity = new Intent(OrderActivity.this, ConfirmOrderActivity.class );
+            newActivity.putExtra("name", name);
+            newActivity.putExtra("email", email);
+            newActivity.putExtra("phone", phone);
+            newActivity.putExtra("address", Address);
+            newActivity.putExtra("shippingFee", shippingFee);
+            newActivity.putExtra("cartlist", (Serializable) cartlist);
 
-
-        Intent newActivity = new Intent(OrderActivity.this, ConfirmOrderActivity.class );
-        newActivity.putExtra("name", name);
-        newActivity.putExtra("email", email);
-        newActivity.putExtra("phone", phone);
-        newActivity.putExtra("address", Address);
-        newActivity.putExtra("shippingFee", shippingFee);
-        newActivity.putExtra("cartlist", (Serializable) cartlist);
-
-        startActivity(newActivity);
+            startActivity(newActivity);
+        }
     }
 
     ShippingFee.Data GHNfee;
     int shippingFee;
 
-    public void getLocation(){
+    public void getShippingFee(){
         Methods methods = getRetrofit().create(Methods.class);
         Call<ShippingFee> call = methods.getShippingFee(token, 53321, 202, 1449, provinceID, districtID, 30, 20, 2000, 10);
         call.enqueue(new Callback<ShippingFee>() {
             @Override
             public void onResponse(Call<ShippingFee> call, Response<ShippingFee> response) {
                 GHNfee = response.body().getData();
-                Log.v("log: ", GHNfee.getTotal().toString());
                 shippingFee = GHNfee.getTotal();
             }
             @Override
