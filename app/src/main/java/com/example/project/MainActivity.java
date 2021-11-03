@@ -166,7 +166,21 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onResponse(Call<ProductsModel> call, Response<ProductsModel> response) {
                 ProductsModel data = response.body();
-                cartlist.add(new CartListModel(data, amount));
+
+                boolean existed = false;
+
+
+                for (CartListModel item : cartlist) {
+                    if (item.getProduct().getProductID() == Integer.valueOf(id)) {
+                        item.setAmount(item.getAmount() + amount);
+                        existed = true;
+                    }
+                }
+
+                if(existed==false){
+                    cartlist.add(new CartListModel(data, amount));
+                }
+
             }
             @Override
             public void onFailure(Call<ProductsModel> call, Throwable t) {
@@ -220,51 +234,4 @@ public class MainActivity extends AppCompatActivity{
             startActivity(newActivity);
         }
     }
-
-    private HubConnection hubConnection;
-    ArrayAdapter<String> messageArrayAdapter;
-    EditText txtMessage;
-    ListView lvMessage;
-
-    public void startSignalR() {
-        LayoutInflater inflater = getLayoutInflater();
-        View chatView = inflater.inflate(R.layout.fragment_chat, null);
-        lvMessage = chatView.findViewById(R.id.lvMessage);
-
-        messageArrayAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1);
-
-        hubConnection = HubConnectionBuilder.create("http://10.0.2.2:8089/chatHub")
-                .build();
-        hubConnection.on("ReceiveMessage", (user, message) -> {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Log.v("Log", user + ":" + message);
-                    messageArrayAdapter.add(user + ":" + message);
-                    messageArrayAdapter.notifyDataSetChanged();
-                }
-            });
-        }, String.class, String.class);
-        hubConnection.start();
-    }
-//    public interface IGetValue{
-//        String getEditTextValue();
-//    }
-//
-//    public void Send(View view) {
-//        LayoutInflater inflater = getLayoutInflater();
-//        View chatView = inflater.inflate(R.layout.fragment_chat, null);
-//
-//        String message = txtMessage.getText().toString();
-//
-//        txtMessage.setText("");
-//        String name = "Minh";
-//        try {
-//            hubConnection.send("SendMessage", name, message);
-//        }
-//        catch (Exception exception){
-//            Log.v("error: ", exception.getMessage());
-//        }
-//    }
-
 }
