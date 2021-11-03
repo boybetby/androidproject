@@ -9,9 +9,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
@@ -19,15 +23,16 @@ import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.lib.Model.CartListModel;
 import com.example.lib.Model.ProductsModel;
 import com.example.lib.interfaceRepository.Methods;
-import com.example.project.Fragments.AboutFragment;
+import com.example.project.Fragments.ChatFragment;
 import com.example.project.Fragments.CartFragment;
 import com.example.project.Fragments.HomeFragment;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import com.microsoft.signalr.HubConnection;
+import com.microsoft.signalr.HubConnectionBuilder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,6 +49,8 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         bottomNavigation = findViewById(R.id.bottom_navigation);
 
@@ -73,7 +80,8 @@ public class MainActivity extends AppCompatActivity{
                         }
                         break;
                     case 3:
-                        fragment = new AboutFragment();
+                        fragment = new ChatFragment();
+//                        startSignalR();
                         break;
                 }
 
@@ -114,7 +122,8 @@ public class MainActivity extends AppCompatActivity{
                         }
                         break;
                     case 3:
-                        fragment = new AboutFragment();
+                        fragment = new ChatFragment();
+//                        startSignalR();
                         break;
                 }
 
@@ -147,10 +156,10 @@ public class MainActivity extends AppCompatActivity{
         String Name = txtProductName.getText().toString();
         displayMessage(view, Name, numberButton.getNumber());
 
-        getProduct(txtProductID.getText().toString(), Integer.parseInt(numberButton.getNumber()));
+        findProduct(txtProductID.getText().toString(), Integer.parseInt(numberButton.getNumber()));
     }
 
-    public void getProduct(String id, int amount){
+    public void findProduct(String id, int amount){
         Methods methods = getRetrofit().create(Methods.class);
         Call<ProductsModel> call = methods.getDetail(id);
         call.enqueue(new Callback<ProductsModel>() {
@@ -210,6 +219,52 @@ public class MainActivity extends AppCompatActivity{
             newActivity.putExtra("cartlist", (Serializable) cartlist);
             startActivity(newActivity);
         }
-
     }
+
+    private HubConnection hubConnection;
+    ArrayAdapter<String> messageArrayAdapter;
+    EditText txtMessage;
+    ListView lvMessage;
+
+    public void startSignalR() {
+        LayoutInflater inflater = getLayoutInflater();
+        View chatView = inflater.inflate(R.layout.fragment_chat, null);
+        lvMessage = chatView.findViewById(R.id.lvMessage);
+
+        messageArrayAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1);
+
+        hubConnection = HubConnectionBuilder.create("http://10.0.2.2:8089/chatHub")
+                .build();
+        hubConnection.on("ReceiveMessage", (user, message) -> {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.v("Log", user + ":" + message);
+                    messageArrayAdapter.add(user + ":" + message);
+                    messageArrayAdapter.notifyDataSetChanged();
+                }
+            });
+        }, String.class, String.class);
+        hubConnection.start();
+    }
+//    public interface IGetValue{
+//        String getEditTextValue();
+//    }
+//
+//    public void Send(View view) {
+//        LayoutInflater inflater = getLayoutInflater();
+//        View chatView = inflater.inflate(R.layout.fragment_chat, null);
+//
+//        String message = txtMessage.getText().toString();
+//
+//        txtMessage.setText("");
+//        String name = "Minh";
+//        try {
+//            hubConnection.send("SendMessage", name, message);
+//        }
+//        catch (Exception exception){
+//            Log.v("error: ", exception.getMessage());
+//        }
+//    }
+
 }

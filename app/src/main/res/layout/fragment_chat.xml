@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.ChatFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textSize="20dp"
+        android:text="Trò chuyện với người hỗ trợ" />
+
+    <ListView
+        android:stackFromBottom="true"
+        android:id="@+id/lvMessage"
+        android:layout_width="match_parent"
+        android:layout_height="432dp"
+        android:layout_marginTop="100dp"
+        android:transcriptMode="alwaysScroll">
+
+    </ListView>
+
+    <LinearLayout
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="550dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/txtMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:ems="10"
+            android:hint="Nhập tin nhắn cho người hỗ trợ"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:onClick="Send"
+            android:layout_weight="0.3"
+            android:layout_gravity="right"
+            android:id="@+id/btnSend"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="Gửi" />
+    </LinearLayout>
+
+
+</FrameLayout>
