@@ -108,7 +108,7 @@ public class ChatFragment extends Fragment{
             public void onClick(View v) {
                 String message = txtMessage.getText().toString();
                 txtMessage.setText("");
-                String name = "Bạn";
+                String name = "Bạn: ";
                 try {
                     hubConnection.send("SendMessage", name, message);
                 }

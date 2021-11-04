@@ -169,7 +169,6 @@ public class MainActivity extends AppCompatActivity{
 
                 boolean existed = false;
 
-
                 for (CartListModel item : cartlist) {
                     if (item.getProduct().getProductID() == Integer.valueOf(id)) {
                         item.setAmount(item.getAmount() + amount);

@@ -5,6 +5,7 @@ import static com.example.lib.RetrofitClient.getRetrofit;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -19,11 +20,23 @@ import com.example.lib.Model.Order.OrderDetail;
 import com.example.lib.interfaceRepository.Methods;
 import com.example.project.Adapter.ConfirmAdapter;
 import com.example.project.PopupDialog.SuccessDialog;
+import com.example.project.SendEmail.JavaMailAPI;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,7 +45,7 @@ import retrofit2.Response;
 public class ConfirmOrderActivity extends AppCompatActivity {
 
     List<CartListModel> cartlist = new ArrayList<>();
-    String address, name, email, phone, OrderID, fullAddress;
+    String address, name, email, phone, OrderID;
     int shippingFee;
     TextView confirmName, confirmEmail, confirmPhone, confirmAddress, confirmPrice, confirmFee, confirmTotalPrice;
     ListView lvConfirm;
@@ -84,6 +97,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
 
     }
 
+
     public void confirm(View view) {
         OrderID = getAlphaNumericString(10);
         Date d = new Date();
@@ -96,9 +110,21 @@ public class ConfirmOrderActivity extends AppCompatActivity {
             OrderDetail orderDetail = new OrderDetail(order.getOrderID(), item.getProduct().getProductID(), item.getAmount());
             insertOrderDetail(orderDetail);
         }
+
+        final String subject = "Đặt hàng thành công tại Yên Concept";
+
+        String message = "Cảm ơn bạn đã chọn chúng tôi\nĐơn hàng của bạn tổng cộng: " + totalPrice.toString() + "\nĐơn hàng sẽ được giao đến: " + address + " sớm nhất có thể!" ;
+
+        JavaMailAPI javaMailAPI = new JavaMailAPI(this,email,subject, message);
+
+        javaMailAPI.execute();
+
         cartlist.clear();
+
         showDialog();
     }
+
+
 
     public void getCartList(){
         for(CartListModel item : cartlist){
@@ -111,8 +137,6 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         DecimalFormat format = new DecimalFormat("0.#");
         return format.format(price) + " VND";
     }
-
-
 
     public void insertOrder(Order order){
         Methods methods = getRetrofit().create(Methods.class);
@@ -148,31 +172,23 @@ public class ConfirmOrderActivity extends AppCompatActivity {
 
     public String getAlphaNumericString(int n)
     {
-
-        // chose a Character random from this String
         String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 + "0123456789"
                 + "abcdefghijklmnopqrstuvxyz";
 
-        // create StringBuffer size of AlphaNumericString
         StringBuilder sb = new StringBuilder(n);
 
         for (int i = 0; i < n; i++) {
-
-            // generate a random number between
-            // 0 to AlphaNumericString variable length
             int index
                     = (int)(AlphaNumericString.length()
                     * Math.random());
 
-            // add Character one by one in end of sb
             sb.append(AlphaNumericString
                     .charAt(index));
         }
 
         return sb.toString();
     }
-
 
     public void showDialog(){
         SuccessDialog exampleDialog = new SuccessDialog();
