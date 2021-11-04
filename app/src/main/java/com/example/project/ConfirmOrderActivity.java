@@ -113,7 +113,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
 
         final String subject = "Đặt hàng thành công tại Yên Concept";
 
-        String message = "Cảm ơn bạn đã chọn chúng tôi\nĐơn hàng của bạn tổng cộng: " + totalPrice.toString() + "\nĐơn hàng sẽ được giao đến: " + address + " sớm nhất có thể!" ;
+        String message = "Cảm ơn bạn đã chọn chúng tôi\nĐơn hàng của bạn tổng cộng: " + formatPrice(totalPrice) + "VND" + "\nĐơn hàng sẽ được giao đến: " + address + " sớm nhất có thể!" ;
 
         JavaMailAPI javaMailAPI = new JavaMailAPI(this,email,subject, message);
 
