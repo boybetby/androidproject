@@ -21,6 +21,10 @@ import android.widget.TextView;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.lib.Model.CartListModel;
+import com.example.lib.Model.Customer;
+import com.example.lib.Model.CustomerResponse;
+import com.example.lib.Model.DrinkDetail;
+import com.example.lib.Model.DrinkModel;
 import com.example.lib.Model.ProductsModel;
 import com.example.lib.interfaceRepository.Methods;
 import com.example.project.Fragments.ChatFragment;
@@ -56,7 +60,7 @@ public class MainActivity extends AppCompatActivity{
 
         bottomNavigation.add(new MeowBottomNavigation.Model(1, R.drawable.ic_home));
         bottomNavigation.add(new MeowBottomNavigation.Model(2, R.drawable.ic_cart));
-        bottomNavigation.add(new MeowBottomNavigation.Model(3, R.drawable.ic_chat));
+        bottomNavigation.add(new MeowBottomNavigation.Model(3, R.drawable.ic_account));
 
         bottomNavigation.setOnShowListener(new MeowBottomNavigation.ShowListener() {
             @Override
@@ -161,16 +165,16 @@ public class MainActivity extends AppCompatActivity{
 
     public void findProduct(String id, int amount){
         Methods methods = getRetrofit().create(Methods.class);
-        Call<ProductsModel> call = methods.getDetail(id);
-        call.enqueue(new Callback<ProductsModel>() {
+        Call<DrinkDetail> call = methods.getDetail(id);
+        call.enqueue(new Callback<DrinkDetail>() {
             @Override
-            public void onResponse(Call<ProductsModel> call, Response<ProductsModel> response) {
-                ProductsModel data = response.body();
+            public void onResponse(Call<DrinkDetail> call, Response<DrinkDetail> response) {
+                DrinkModel data = response.body().getDrink();
 
                 boolean existed = false;
 
                 for (CartListModel item : cartlist) {
-                    if (item.getProduct().getProductID() == Integer.valueOf(id)) {
+                    if (item.getProduct().getId() == id) {
                         item.setAmount(item.getAmount() + amount);
                         existed = true;
                     }
@@ -182,7 +186,7 @@ public class MainActivity extends AppCompatActivity{
 
             }
             @Override
-            public void onFailure(Call<ProductsModel> call, Throwable t) {
+            public void onFailure(Call<DrinkDetail> call, Throwable t) {
                 Log.v("log:", t.getMessage());
             }
         });
@@ -233,4 +237,31 @@ public class MainActivity extends AppCompatActivity{
             startActivity(newActivity);
         }
     }
+
+//    EditText  txtUsername, txtPassword;
+//
+//    public void processLogin(View view) {
+//        txtUsername = (EditText) findViewById(R.id.txtusername);
+//        txtPassword = (EditText) findViewById(R.id.txtpassword);
+//
+//        String username = txtUsername.getText().toString();
+//        String password = txtPassword.getText().toString();
+//
+//        Log.v("USERNAME", username);
+//
+//        Methods methods = getRetrofit().create(Methods.class);
+//        Call<CustomerResponse> call = methods.loginCustomer(new Customer(username, password));
+//        call.enqueue(new Callback<CustomerResponse>() {
+//            @Override
+//            public void onResponse(Call<CustomerResponse> call, Response<CustomerResponse> response) {
+//                String data = response.body().getAccessToken();
+//                Log.v("ACCESSTOKEN", data);
+//            }
+//            @Override
+//            public void onFailure(Call<CustomerResponse> call, Throwable t) {
+//                Log.v("log:", t.getMessage());
+//            }
+//        });
+//
+//    }
 }

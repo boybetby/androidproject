@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.lib.Model.CartListModel;
+import com.example.lib.Model.DrinkOrder;
 import com.example.lib.Model.Order.Order;
 import com.example.lib.Model.Order.OrderDetail;
 import com.example.lib.interfaceRepository.Methods;
@@ -63,7 +64,6 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         confirmName = findViewById(R.id.confirmName);
-        confirmEmail = findViewById(R.id.confirmEmail);
         confirmPhone = findViewById(R.id.confirmPhone);
         confirmAddress = findViewById(R.id.confirmAddress);
         confirmPrice = findViewById(R.id.confirmPrice);
@@ -76,24 +76,19 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         Intent intent = getIntent();
         cartlist = (List<CartListModel>) intent.getSerializableExtra("cartlist");
         name = intent.getStringExtra("name");
-        email = intent.getStringExtra("email");
         phone = intent.getStringExtra("phone");
         address = intent.getStringExtra("address");
-        shippingFee = intent.getIntExtra("shippingFee", 0);
 
         confirmName.setText(name);
-        confirmEmail.setText(email);
         confirmPhone.setText(phone);
         confirmAddress.setText(address);
-        confirmFee.setText(Integer.toString(shippingFee) + " VND");
 
         getCartList();
 
         lvConfirm.setAdapter(confirmAdapter);
 
         confirmPrice.setText(formatPrice(price));
-        totalPrice = price + shippingFee;
-        confirmTotalPrice.setText(formatPrice(totalPrice));
+        confirmTotalPrice.setText(formatPrice(price));
 
     }
 
@@ -101,23 +96,17 @@ public class ConfirmOrderActivity extends AppCompatActivity {
     public void confirm(View view) {
         OrderID = getAlphaNumericString(10);
         Date d = new Date();
-        CharSequence date  = DateFormat.format("MM/dd/yyyy hh:mm:ss", d.getTime());
-        order = new Order(OrderID, name, email, phone, address, totalPrice, date.toString());
 
-        insertOrder(order);
+        ArrayList<DrinkOrder> drinks = new ArrayList<>();
 
         for(CartListModel item : cartlist){
-            OrderDetail orderDetail = new OrderDetail(order.getOrderID(), item.getProduct().getProductID(), item.getAmount());
-            insertOrderDetail(orderDetail);
+            DrinkOrder drinkOrder = new DrinkOrder(item.getProduct().getId(), item.getProduct().getDrinkName(), Double.valueOf(item.getProduct().getDefaultPrice().get(0)), "S", item.getAmount());
+            drinks.add(drinkOrder);
         }
 
-        final String subject = "Đặt hàng thành công tại Yên Concept";
+        order = new Order(name, phone, drinks, totalPrice, "DELIVERY", address);
 
-        String message = "Cảm ơn bạn đã chọn chúng tôi\nĐơn hàng của bạn tổng cộng: " + formatPrice(totalPrice) + "VND" + "\nĐơn hàng sẽ được giao đến: " + address + " sớm nhất có thể!" ;
-
-        JavaMailAPI javaMailAPI = new JavaMailAPI(this,email,subject, message);
-
-        javaMailAPI.execute();
+        insertOrder(order);
 
         cartlist.clear();
 
@@ -128,7 +117,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
 
     public void getCartList(){
         for(CartListModel item : cartlist){
-            price = price + item.getProduct().getPrice() * item.getAmount();
+            price = price + item.getProduct().getDefaultPrice().get(0) * item.getAmount();
             confirmAdapter.add(new CartListModel(item.getProduct(), item.getAmount()));
         }
     }

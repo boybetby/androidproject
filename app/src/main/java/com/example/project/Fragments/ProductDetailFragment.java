@@ -78,7 +78,7 @@ public class ProductDetailFragment extends Fragment {
     public int amount;
     public int cartcount = 0;
 
-    int productID;
+    String productID;
     String productName;
     double productPrice;
     String productImageURL;
@@ -96,10 +96,9 @@ public class ProductDetailFragment extends Fragment {
         Bundle bundle = this.getArguments();
 
         String URL = bundle.getString("image");
-        String newImageURL = URL.substring(5);
 
-        productID = bundle.getInt("id");
-        productImageURL = "http://10.0.2.2:8088" + newImageURL;
+        productID = bundle.getString("id");
+        productImageURL = "http://10.0.2.2:5000" + URL;
         productName = bundle.getString("name");
         productPrice = bundle.getDouble("price");
 
@@ -110,7 +109,7 @@ public class ProductDetailFragment extends Fragment {
         txtPrice = rootView.findViewById(R.id.detailPrice);
 
         Picasso.get().load(productImageURL).into(imgProduct);
-        txtID.setText(Integer.toString(productID));
+        txtID.setText(productID);
         txtName.setText(productName);
         txtPrice.setText(formatPrice(productPrice));
 

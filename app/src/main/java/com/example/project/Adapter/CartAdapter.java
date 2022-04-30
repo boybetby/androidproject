@@ -49,16 +49,15 @@ public class CartAdapter extends ArrayAdapter<CartListModel> {
 
         CartListModel spModel = getItem(position);
 
-        String imageUrl = spModel.getProduct().getImage();
-        String newImageURL = imageUrl.substring(5);
+        String imageUrl = spModel.getProduct().getDrinkImage();
 
-        String URL = "http://10.0.2.2:8088" + newImageURL;
+        String URL = "http://10.0.2.2:5000" + imageUrl;
 
         DecimalFormat format = new DecimalFormat("0.#");
-        String newPrice = format.format(spModel.getProduct().getPrice()) + " VND";
+        String newPrice = format.format(spModel.getProduct().getDefaultPrice().get(0)) + " VND";
 
         Picasso.get().load(URL).into(imgProduct);
-        txtName.setText(spModel.getProduct().getProductname());
+        txtName.setText(spModel.getProduct().getDrinkName());
         txtPrice.setText(newPrice);
         amountButton.setNumber(Integer.toString(spModel.getAmount()));
 

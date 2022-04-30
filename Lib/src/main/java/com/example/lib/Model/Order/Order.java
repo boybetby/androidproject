@@ -1,84 +1,92 @@
 package com.example.lib.Model.Order;
 
+import com.example.lib.Model.DrinkModel;
+import com.example.lib.Model.DrinkOrder;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Order implements Serializable {
-    String OrderID;
-    String Name;
-    String Email;
-    String PhoneNumber;
-    String Address;
-    Double TotalPrice;
-    String Date;
 
-    public Order() {
+    @SerializedName("customerName")
+    @Expose
+    String customerName;
+    @SerializedName("customer")
+    @Expose
+    String customer;
+    @SerializedName("drinks")
+    @Expose
+    ArrayList<DrinkOrder> drinks;
+    @SerializedName("totalPrice")
+    @Expose
+    Double totalPrice;
+    @SerializedName("type")
+    @Expose
+    String type;
+    @SerializedName("customerAddress")
+    @Expose
+    String customerAddress;
+
+    public Order() {}
+
+    public Order(String customerName, String customer, ArrayList<DrinkOrder> drinks, Double totalPrice, String type, String customerAddress) {
+        this.customerName = customerName;
+        this.customer = customer;
+        this.drinks = drinks;
+        this.totalPrice = totalPrice;
+        this.type = type;
+        this.customerAddress = customerAddress;
     }
 
-    public Order(String orderID, String name, String email, String phoneNumber, String address, Double totalPrice, String date) {
-        OrderID = orderID;
-        Name = name;
-        Email = email;
-        PhoneNumber = phoneNumber;
-        Address = address;
-        TotalPrice = totalPrice;
-        Date = date;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public String getOrderID() {
-        return OrderID;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
-    public void setOrderID(String orderID) {
-        OrderID = orderID;
+    public String getCustomer() {
+        return customer;
     }
 
-    public String getName() {
-        return Name;
+    public void setCustomer(String customer) {
+        this.customer = customer;
     }
 
-    public void setName(String name) {
-        Name = name;
+    public ArrayList<DrinkOrder> getDrinks() {
+        return drinks;
     }
 
-    public String getEmail() {
-        return Email;
-    }
-
-    public void setEmail(String email) {
-        Email = email;
-    }
-
-    public String getPhoneNumber() {
-        return PhoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        PhoneNumber = phoneNumber;
-    }
-
-    public String getAddress() {
-        return Address;
-    }
-
-    public void setAddress(String address) {
-        Address = address;
+    public void setDrinks(ArrayList<DrinkOrder> drinks) {
+        this.drinks = drinks;
     }
 
     public Double getTotalPrice() {
-        return TotalPrice;
+        return totalPrice;
     }
 
     public void setTotalPrice(Double totalPrice) {
-        TotalPrice = totalPrice;
+        this.totalPrice = totalPrice;
     }
 
-    public String getDate() {
-        return Date;
+    public String getType() {
+        return type;
     }
 
-    public void setDate(String date) {
-        Date = date;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getCustomerAddress() {
+        return customerAddress;
+    }
+
+    public void setCustomerAddress(String customerAddress) {
+        this.customerAddress = customerAddress;
     }
 }
 

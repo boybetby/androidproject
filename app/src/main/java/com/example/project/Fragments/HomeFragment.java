@@ -13,16 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
-import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
+import com.example.lib.Model.DrinkList;
+import com.example.lib.Model.DrinkModel;
 import com.example.lib.Model.ProductsModel;
 import com.example.lib.interfaceRepository.Methods;
 import com.example.project.Adapter.ProductsAdapter;
-import com.example.project.MainActivity;
 import com.example.project.R;
 
 
@@ -110,13 +107,13 @@ public class HomeFragment extends Fragment {
         lvProducts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ProductsModel item =(ProductsModel) adapterView.getAdapter().getItem(i);
+                DrinkModel item =(DrinkModel) adapterView.getAdapter().getItem(i);
 
                 Bundle bundle = new Bundle();
-                bundle.putInt("id", item.getProductID());
-                bundle.putString("name", item.getProductname());
-                bundle.putDouble("price", item.getPrice());
-                bundle.putString("image", item.getImage());
+                bundle.putString("id", item.getId());
+                bundle.putString("name", item.getDrinkName());
+                bundle.putDouble("price", item.getDefaultPrice().get(0));
+                bundle.putString("image", item.getDrinkImage());
 
                 ProductDetailFragment nextFrag= new ProductDetailFragment();
                 nextFrag.setArguments(bundle);
@@ -135,21 +132,20 @@ public class HomeFragment extends Fragment {
 
     private void getProduct() {
         Methods methods = getRetrofit().create(Methods.class);
-        Call<List<ProductsModel>> call = methods.getProducts();
-        call.enqueue(new Callback<List<ProductsModel>>() {
+        Call<DrinkList> call = methods.getProducts();
+        call.enqueue(new Callback<DrinkList>() {
             @Override
-            public void onResponse(Call<List<ProductsModel>> call, Response<List<ProductsModel>> response) {
+            public void onResponse(Call<DrinkList> call, Response<DrinkList> response) {
+                DrinkList data = response.body();
 
-                List<ProductsModel> data = response.body();
-
-                for (ProductsModel dt : data) {
+                for (DrinkModel dt : data.getDrinks()) {
                     //Integer productID, String productname, String description, Integer price, Integer category, String image
-                    productsAdapter.add(new ProductsModel(dt.getProductID(), dt.getProductname(), dt.getDescription(),dt.getPrice(),dt.getCategory(),dt.getImage()));
+                    productsAdapter.add(new DrinkModel(dt.getId(), dt.getDrinkName(), dt.getDrinkImage(),dt.getDefaultPrice(),dt.getCategory(),dt.getDescription()));
                 }
             }
 
             @Override
-            public void onFailure(Call<List<ProductsModel>> call, Throwable t) {
+            public void onFailure(Call<DrinkList> call, Throwable t) {
                 Log.v("log:", t.getMessage());
             }
         });

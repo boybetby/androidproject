@@ -3,22 +3,22 @@ package com.example.lib.Model;
 import java.io.Serializable;
 
 public class CartListModel implements Serializable {
-    ProductsModel product;
+    DrinkModel product;
     int amount;
 
     public CartListModel() {
     }
 
-    public CartListModel(ProductsModel product, int amount) {
+    public CartListModel(DrinkModel product, int amount) {
         this.product = product;
         this.amount = amount;
     }
 
-    public ProductsModel getProduct() {
+    public DrinkModel getProduct() {
         return product;
     }
 
-    public void setProduct(ProductsModel product) {
+    public void setProduct(DrinkModel product) {
         this.product = product;
     }
 

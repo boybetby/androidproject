@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="450dp"
+    android:layout_gravity="center"
+    android:padding="10dp">
+
+
+    <EditText
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:id="@+id/txtusername"
+        android:hint="Username"
+        />
+
+    <EditText
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:layout_below="@id/txtusername"
+        android:id="@+id/txtpassword"
+        android:hint="Password"
+        />
+
+    <Button
+        android:id="@+id/btnProcessLogin"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtpassword"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="@color/black"
+        android:text="Login"
+        android:onClick="processLogin"
+        android:textColor="@color/white" />
+
+</RelativeLayout>

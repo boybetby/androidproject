@@ -11,7 +11,7 @@ public class OrderDetail implements Serializable {
     private String orderid;
     @SerializedName("ProductID")
     @Expose
-    private Integer productID;
+    private String productID;
     @SerializedName("amount")
     @Expose
     private Integer amount;
@@ -20,7 +20,7 @@ public class OrderDetail implements Serializable {
 
     }
 
-    public OrderDetail(String orderid, Integer productID, Integer amount) {
+    public OrderDetail(String orderid, String productID, Integer amount) {
         this.orderid = orderid;
         this.productID = productID;
         this.amount = amount;
@@ -34,11 +34,11 @@ public class OrderDetail implements Serializable {
         this.orderid = orderid;
     }
 
-    public Integer getProductID() {
+    public String getProductID() {
         return productID;
     }
 
-    public void setProductID(Integer productID) {
+    public void setProductID(String productID) {
         this.productID = productID;
     }
 

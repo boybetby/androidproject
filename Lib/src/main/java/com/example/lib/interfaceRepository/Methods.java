@@ -1,5 +1,9 @@
 package com.example.lib.interfaceRepository;
 
+import com.example.lib.Model.Customer;
+import com.example.lib.Model.CustomerResponse;
+import com.example.lib.Model.DrinkDetail;
+import com.example.lib.Model.DrinkList;
 import com.example.lib.Model.GHNapi.District;
 import com.example.lib.Model.GHNapi.Province;
 import com.example.lib.Model.GHNapi.Ward;
@@ -7,12 +11,6 @@ import com.example.lib.Model.Order.Address;
 import com.example.lib.Model.Order.Order;
 import com.example.lib.Model.Order.OrderDetail;
 import com.example.lib.Model.Order.ShippingFee;
-import com.example.lib.Model.OrderModel;
-import com.example.lib.Model.ProductsModel;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -21,19 +19,20 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.QueryMap;
 
 public interface Methods {
 
     //product
-    @GET("api/fetch")
-    Call<List<ProductsModel>> getProducts();
-    @GET("api/fetch/{id}")
-    Call<ProductsModel> getDetail(@Path("id") String id);
-    @POST("api/OrdersAPI")
+    @GET("api/drink")
+    Call<DrinkList> getProducts();
+    @GET("api/drink/detail/{id}")
+    Call<DrinkDetail> getDetail(@Path("id") String id);
+    @POST("api/order/orderonline")
     Call<Order> insertOrder(@Body Order order);
     @POST("api/Details")
     Call<OrderDetail> insertOrderDetail(@Body OrderDetail orderDetail);
+    @POST("api/customer/login")
+    Call<CustomerResponse> loginCustomer(@Body Customer user);
 
     //ghnApi
     @GET("https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province")

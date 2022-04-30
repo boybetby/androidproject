@@ -39,7 +39,7 @@ public class ConfirmAdapter extends ArrayAdapter<CartListModel> {
 
         CartListModel spModel = getItem(position);
 
-        txtName.setText(spModel.getProduct().getProductname());
+        txtName.setText(spModel.getProduct().getDrinkName());
         txtAmount.setText(Integer.toString(spModel.getAmount()));
 
         return productView;

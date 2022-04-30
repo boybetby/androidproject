@@ -108,7 +108,8 @@ public class CartFragment extends Fragment {
 
         for (int i = 0; i < cartlist.size(); i ++) {
             CartListModel item = cartAdapter.getItem(i);
-            totalPrice += item.getProduct().getPrice()*item.getAmount();
+            Log.v("PRICE", item.getProduct().getDefaultPrice().get(0).toString());
+            totalPrice += item.getProduct().getDefaultPrice().get(0)*item.getAmount();
             totalAmount += 1;
         }
 
@@ -126,7 +127,7 @@ public class CartFragment extends Fragment {
 
                     }
                     else {
-                        totalPrice += item.getProduct().getPrice()*item.getAmount();
+                        totalPrice += item.getProduct().getDefaultPrice().get(0)*item.getAmount();
                         totalAmount += 1;
                     }
 

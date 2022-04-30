@@ -1,25 +1,46 @@
 package com.example.project.Fragments;
 
+import static com.example.lib.RetrofitClient.getRetrofit;
+
+import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 
+import com.example.lib.Model.Customer;
+import com.example.lib.Model.CustomerResponse;
+import com.example.lib.interfaceRepository.Methods;
 import com.example.project.MainActivity;
 import com.example.project.R;
+import com.google.zxing.WriterException;
 import com.microsoft.signalr.HubConnection;
 import com.microsoft.signalr.HubConnectionBuilder;
 import com.microsoft.signalr.HubConnectionState;
+
+import androidmads.library.qrgenearator.QRGContents;
+import androidmads.library.qrgenearator.QRGEncoder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -74,8 +95,12 @@ public class ChatFragment extends Fragment{
 
     private HubConnection hubConnection;
     ArrayAdapter<String> messageArrayAdapter;
-    EditText txtMessage;
-    ListView lvMessage;
+    EditText txtUsername, txtPassword;
+    Dialog dialog;
+    Button btnLogin, processLoginBtn;
+    ImageView qrImage;
+    Bitmap bitmap;
+    QRGEncoder qrgEncoder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,38 +108,115 @@ public class ChatFragment extends Fragment{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
 
-        txtMessage = rootView.findViewById(R.id.txtMessage);
+        qrImage = rootView.findViewById(R.id.qrImage);
+        btnLogin = rootView.findViewById(R.id.btnLogin);
 
-        lvMessage = (ListView) rootView.findViewById(R.id.lvMessage);
-        messageArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
-        lvMessage.setAdapter(messageArrayAdapter);
-        hubConnection = HubConnectionBuilder.create("http://10.0.2.2:8089/chatHub")
-                .build();
-        hubConnection.on("ReceiveMessage", (user, message) -> {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Log.v("Log", user + ":" + message);
-                    messageArrayAdapter.add(user + ": " + message);
-                    messageArrayAdapter.notifyDataSetChanged();
-                }
-            });
-        }, String.class, String.class);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+        settings.edit().clear().commit();
+        String ret = settings.getString("jwt", "0");
+        if(ret != "0") {
+            WindowManager manager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
 
-        hubConnection.start();
+            // initializing a variable for default display.
+            Display display = manager.getDefaultDisplay();
 
-        rootView.findViewById(R.id.btnSend).setOnClickListener(new View.OnClickListener() {
+            // creating a variable for point which
+            // is to be displayed in QR Code.
+            Point point = new Point();
+            display.getSize(point);
+
+            // getting width and
+            // height of a point
+            int width = point.x;
+            int height = point.y;
+
+            // generating dimension from width and height.
+            int dimen = width < height ? width : height;
+            dimen = dimen * 3 / 4;
+            qrgEncoder = new QRGEncoder(ret, null, QRGContents.Type.TEXT, dimen);
+            try {
+                bitmap = qrgEncoder.encodeAsBitmap();
+
+                qrImage.setImageBitmap(bitmap);
+            } catch (WriterException e) {
+
+                Log.e("Tag", e.toString());
+            }
+            btnLogin.setText("Logout");
+        }
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String message = txtMessage.getText().toString();
-                txtMessage.setText("");
-                String name = "Bạn: ";
-                try {
-                    hubConnection.send("SendMessage", name, message);
-                }
-                catch (Exception exception){
-                    Log.v("error: ", exception.getMessage());
-                }
+                dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.loginpopup);
+
+                txtUsername = dialog.findViewById(R.id.txtusername);
+                txtPassword = dialog.findViewById(R.id.txtpassword);
+
+                processLoginBtn = dialog.findViewById(R.id.btnProcessLogin);
+
+                processLoginBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String username = txtUsername.getText().toString();
+                        String password = txtPassword.getText().toString();
+
+                        Methods methods = getRetrofit().create(Methods.class);
+                        Call<CustomerResponse> call = methods.loginCustomer(new Customer(username, password));
+                        call.enqueue(new Callback<CustomerResponse>() {
+                            @Override
+                            public void onResponse(Call<CustomerResponse> call, Response<CustomerResponse> response) {
+                                String data = response.body().getAccessToken();
+                                Log.v("ACCESSTOKEN", data);
+                                if(response.body().getSuccess()) {
+
+                                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+                                    SharedPreferences.Editor editor = settings.edit();
+                                    editor.putString("jwt", data);
+                                    editor.commit();
+
+                                    WindowManager manager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+
+                                    // initializing a variable for default display.
+                                    Display display = manager.getDefaultDisplay();
+
+                                    // creating a variable for point which
+                                    // is to be displayed in QR Code.
+                                    Point point = new Point();
+                                    display.getSize(point);
+
+                                    // getting width and
+                                    // height of a point
+                                    int width = point.x;
+                                    int height = point.y;
+
+                                    // generating dimension from width and height.
+                                    int dimen = width < height ? width : height;
+                                    dimen = dimen * 3 / 4;
+                                    qrgEncoder = new QRGEncoder(data, null, QRGContents.Type.TEXT, dimen);
+                                    try {
+                                        bitmap = qrgEncoder.encodeAsBitmap();
+
+                                        qrImage.setImageBitmap(bitmap);
+                                    } catch (WriterException e) {
+
+                                        Log.e("Tag", e.toString());
+                                    }
+                                    btnLogin.setText("Logout");
+                                    dialog.dismiss();
+                                }
+                            }
+                            @Override
+                            public void onFailure(Call<CustomerResponse> call, Throwable t) {
+                                Log.v("log:", t.getMessage());
+                            }
+                        });
+                    }
+                });
+
+                dialog.show();
             }
         });
 

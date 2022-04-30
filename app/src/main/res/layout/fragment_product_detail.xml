@@ -20,7 +20,7 @@
         <ImageView
             android:id="@+id/detailImage"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="280dp"
             android:src="@drawable/pd_1" />
 
         <TextView

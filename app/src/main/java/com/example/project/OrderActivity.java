@@ -71,7 +71,6 @@ public class OrderActivity extends AppCompatActivity {
 
         txtAddress = findViewById(R.id.txtAddress);
         txtName = findViewById(R.id.orderName);
-        txtEmail = findViewById(R.id.orderEmail);
         txtPhone = findViewById(R.id.orderPhone);
 
         Intent intent = getIntent();
@@ -111,8 +110,6 @@ public class OrderActivity extends AppCompatActivity {
                         districtID = item.getDistrictID();
                     }
                 }
-
-                getShippingFee();
 
                 if(districtID != 0)
                     getWard(districtID);
@@ -218,14 +215,10 @@ public class OrderActivity extends AppCompatActivity {
         wardSpinner = findViewById(R.id.spinnerWard);
         txtAddress = findViewById(R.id.txtAddress);
         txtName = findViewById(R.id.orderName);
-        txtEmail = findViewById(R.id.orderEmail);
         txtPhone = findViewById(R.id.orderPhone);
 
         if(TextUtils.isEmpty(txtName.getText())){
             txtName.setError("Xin hãy điền họ tên");
-        }
-        if(TextUtils.isEmpty(txtEmail.getText())){
-            txtEmail.setError("Xin hãy điền Email");
         }
         if(TextUtils.isEmpty(txtPhone.getText())){
             txtPhone.setError("Xin hãy điền số điện thoại");
@@ -241,17 +234,14 @@ public class OrderActivity extends AppCompatActivity {
             ward = wardSpinner.getSelectedItem().toString();
             address = txtAddress.getText().toString();
             name = txtName.getText().toString();
-            email = txtEmail.getText().toString();
             phone = txtPhone.getText().toString();
 
             Address = address + ", " + ward + ", " + district + ", " + province;
 
             Intent newActivity = new Intent(OrderActivity.this, ConfirmOrderActivity.class );
             newActivity.putExtra("name", name);
-            newActivity.putExtra("email", email);
             newActivity.putExtra("phone", phone);
             newActivity.putExtra("address", Address);
-            newActivity.putExtra("shippingFee", shippingFee);
             newActivity.putExtra("cartlist", (Serializable) cartlist);
 
             startActivity(newActivity);
@@ -261,20 +251,6 @@ public class OrderActivity extends AppCompatActivity {
     ShippingFee.Data GHNfee;
     int shippingFee;
 
-    public void getShippingFee(){
-        Methods methods = getRetrofit().create(Methods.class);
-        Call<ShippingFee> call = methods.getShippingFee(token, 53321, 202, 1449, provinceID, districtID, 30, 20, 2000, 10);
-        call.enqueue(new Callback<ShippingFee>() {
-            @Override
-            public void onResponse(Call<ShippingFee> call, Response<ShippingFee> response) {
-                GHNfee = response.body().getData();
-                shippingFee = GHNfee.getTotal();
-            }
-            @Override
-            public void onFailure(Call<ShippingFee> call, Throwable t) {
-                Log.v("log: ", t.getMessage());
-            }
-        });
-    }
+
 
 }

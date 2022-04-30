@@ -13,14 +13,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.lib.Model.DrinkModel;
 import com.example.lib.Model.ProductsModel;
 import com.example.lib.RetrofitClient;
 import com.example.project.R;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
-public class ProductsAdapter extends ArrayAdapter<ProductsModel> {
+public class ProductsAdapter extends ArrayAdapter<DrinkModel> {
     Activity context;
     int resource;
     public ProductsAdapter(@NonNull Context context, int resource) {
@@ -39,18 +41,16 @@ public class ProductsAdapter extends ArrayAdapter<ProductsModel> {
         TextView txtName = productView.findViewById(R.id.productName);
         TextView txtPrice = productView.findViewById(R.id.productPrice);
 
-        ProductsModel spModel = getItem(position);
+        DrinkModel spModel = getItem(position);
 
-        String imageUrl = spModel.getImage();
-        String newImageURL = imageUrl.substring(5);
-
-        String URL = "http://10.0.2.2:8088" + newImageURL;
+        String imageUrl = spModel.getDrinkImage();
+        String URL = "http://10.0.2.2:5000" + imageUrl;
 
         DecimalFormat format = new DecimalFormat("0.#");
-        String newPrice = format.format(spModel.getPrice()) + " VND";
+        String newPrice = format.format(spModel.getDefaultPrice().get(0)) + " VND";
 
         Picasso.get().load(URL).into(imgProduct);
-        txtName.setText(spModel.getProductname());
+        txtName.setText(spModel.getDrinkName());
         txtPrice.setText(newPrice);
 
         return productView;
